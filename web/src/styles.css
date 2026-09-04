@@ -1,11 +1,187 @@
+/*
+  Airmail, day and night.
+
+  Every colour lives in a token block. No rule body below the four blocks
+  contains a hex value, so a theme is one re-declaration of the same names —
+  not a second set of overrides chasing the first.
+
+  ORDER MATTERS AND IS DELIBERATE:
+
+    1. :root                                    light, the default
+    2. @media (prefers-color-scheme: dark)      dark, when the OS says so
+    3. [data-theme='light']                     user forced light
+    4. [data-theme='dark']                      user forced dark
+
+  Blocks 3 and 4 come AFTER block 2 on purpose. All three selectors carry the
+  same specificity, so the later one wins — put the overrides first and the
+  toggle would work on a light-mode machine and silently do nothing on a
+  dark-mode one.
+
+  Block 2 also carries :not([data-theme='light']) so that a forced-light
+  override wins on its own merit rather than only by being further down the
+  file. Belt and braces: ordering is correct here, and this does not depend
+  on it staying correct.
+
+  Cost of this shape: the palettes are written twice. Keep the pairs in sync —
+  :root with [data-theme='light'], and the media block with
+  [data-theme='dark'].
+
+  Contrast is measured, not eyeballed. Both palettes clear WCAG AA in every
+  text pairing (4.5:1 body, 3:1 large and non-text), including the postmark,
+  which sits at opacity .9 and so is checked as its blended colour rather
+  than its token value.
+*/
+
+/* ---------- 1. light, the default ---------- */
+
 :root {
-  --paper: #edeff1;
+  color-scheme: light;
+
+  /* surfaces, back to front */
+  --page: #edeff1;
+  --sheet: #fbfbf9;
+  --sheet-border: #d5d9de;
+  --sheet-inset: #ffffff;
+  --rule: #e2e5e9;
+  --card: #ffffff;
+  --card-border: #d5d9de;
+
+  /* text */
   --ink: #16202e;
-  --red: #c1272d;
+  --muted: #5c6774;
+
+  /* airmail */
+  --red: #b02127;
   --blue: #1b4b8f;
-  --cancel: #6e7a88;
-  --card: #fbfbf9;
+
+  /* controls */
+  --field-bg: #ffffff;
+  --field-border: #c3c9d1;
+  --field-underline: #16202e;
+  --btn-bg: #1b4b8f;
+  --btn-bg-hover: #163d75;
+  --btn-bg-busy: #5c6774;
+  --btn-text: #ffffff;
+  --focus: #1b4b8f;
+  --error-border: #e6c9ca;
+
+  /* the theme stamp */
+  --stamp-face: #ffffff;
+  --stamp-ink: #1b4b8f;
+  --stamp-perf: #7c8794;
 }
+
+/* ---------- 2. dark, when the OS says so ---------- */
+
+/*
+  Airmail at night — a navy ink ground, not the light sheet inverted. The paper
+  becomes ink and the airmail marks brighten to stay legible on it: the red
+  lifts to a signal red, and the button blue lightens so white type still
+  clears 4.5:1 on it.
+*/
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --page: #0d1522;
+    --sheet: #14202f;
+    --sheet-border: #263449;
+    --sheet-inset: rgba(255, 255, 255, 0.04);
+    --rule: #253346;
+    --card: #1b2a3e;
+    --card-border: #2c3d55;
+
+    --ink: #e9eef5;
+    --muted: #9dacc1;
+
+    --red: #ff8b92;
+    --blue: #3e6fbf;
+
+    --field-bg: #0b1420;
+    --field-border: #2c3d55;
+    --field-underline: #9dacc1;
+    --btn-bg: #3e6fbf;
+    --btn-bg-hover: #4d7ed0;
+    --btn-bg-busy: #3b4a5f;
+    --btn-text: #ffffff;
+    --focus: #86abeb;
+    --error-border: #5a2f38;
+
+    --stamp-face: #1b2a3e;
+    --stamp-ink: #9ec2f5;
+    --stamp-perf: #6c7e97;
+  }
+}
+
+/* ---------- 3. user forced light ---------- */
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --page: #edeff1;
+  --sheet: #fbfbf9;
+  --sheet-border: #d5d9de;
+  --sheet-inset: #ffffff;
+  --rule: #e2e5e9;
+  --card: #ffffff;
+  --card-border: #d5d9de;
+
+  --ink: #16202e;
+  --muted: #5c6774;
+
+  --red: #b02127;
+  --blue: #1b4b8f;
+
+  --field-bg: #ffffff;
+  --field-border: #c3c9d1;
+  --field-underline: #16202e;
+  --btn-bg: #1b4b8f;
+  --btn-bg-hover: #163d75;
+  --btn-bg-busy: #5c6774;
+  --btn-text: #ffffff;
+  --focus: #1b4b8f;
+  --error-border: #e6c9ca;
+
+  --stamp-face: #ffffff;
+  --stamp-ink: #1b4b8f;
+  --stamp-perf: #7c8794;
+}
+
+/* ---------- 4. user forced dark ---------- */
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --page: #0d1522;
+  --sheet: #14202f;
+  --sheet-border: #263449;
+  --sheet-inset: rgba(255, 255, 255, 0.04);
+  --rule: #253346;
+  --card: #1b2a3e;
+  --card-border: #2c3d55;
+
+  --ink: #e9eef5;
+  --muted: #9dacc1;
+
+  --red: #ff8b92;
+  --blue: #3e6fbf;
+
+  --field-bg: #0b1420;
+  --field-border: #2c3d55;
+  --field-underline: #9dacc1;
+  --btn-bg: #3e6fbf;
+  --btn-bg-hover: #4d7ed0;
+  --btn-bg-busy: #3b4a5f;
+  --btn-text: #ffffff;
+  --focus: #86abeb;
+  --error-border: #5a2f38;
+
+  --stamp-face: #1b2a3e;
+  --stamp-ink: #9ec2f5;
+  --stamp-perf: #6c7e97;
+}
+
+/* ================= no hex values below this line ================= */
 
 * {
   box-sizing: border-box;
@@ -14,7 +190,7 @@
 html,
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--page);
   color: var(--ink);
   font-family: Karla, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -33,9 +209,9 @@ body {
   position: relative;
   width: 100%;
   max-width: 33rem;
-  background: var(--card);
-  border: 1px solid #d5d9de;
-  box-shadow: 0 1px 0 #fff inset;
+  background: var(--sheet);
+  border: 1px solid var(--sheet-border);
+  box-shadow: 0 1px 0 var(--sheet-inset) inset;
   padding: 2.5rem 2.25rem 2.75rem;
 }
 
@@ -53,10 +229,18 @@ body {
   );
 }
 
-/* ---------- masthead ---------- */
+/* ---------- masthead and stamp ---------- */
+
+.topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 2.25rem;
+}
 
 .masthead {
-  margin: 0 0 2.25rem;
+  min-width: 0;
 }
 
 .masthead h1 {
@@ -71,16 +255,40 @@ body {
 .standfirst {
   margin: 0;
   max-width: 30ch;
-  color: var(--cancel);
+  color: var(--muted);
   font-size: 1rem;
   line-height: 1.55;
+}
+
+/*
+  The theme control is a postage stamp: taller than wide, a perforated edge,
+  and set a couple of degrees off square as though it were stuck on by hand.
+  Sun for day post, moon for night mail.
+*/
+.stamp {
+  flex: 0 0 auto;
+  width: 3.05rem;
+  height: 3.55rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: var(--stamp-face);
+  color: var(--stamp-ink);
+  border: 2px dashed var(--stamp-perf);
+  cursor: pointer;
+  transform: rotate(-2.5deg);
+}
+
+.stamp:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
 }
 
 /* ---------- address block ---------- */
 
 .addressblock {
   padding-top: 1.5rem;
-  border-top: 1px solid #e2e5e9;
+  border-top: 1px solid var(--rule);
 }
 
 .fieldlabel {
@@ -88,7 +296,18 @@ body {
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+/*
+  A visible hint rather than a placeholder. A placeholder light enough to read
+  as a hint fails AA, and one dark enough to pass reads as a filled field — so
+  the format guidance sits outside the input and stays put once typing starts.
+*/
+.fieldhint {
+  margin: 0 0 0.7rem;
+  font-size: 0.875rem;
+  color: var(--muted);
 }
 
 .fieldrow {
@@ -105,19 +324,15 @@ body {
   font-weight: 500;
   letter-spacing: 0.34em;
   color: var(--ink);
-  background: #fff;
-  border: 1px solid #c3c9d1;
-  border-bottom: 2px solid var(--ink);
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-bottom: 2px solid var(--field-underline);
   padding: 0.7rem 0.85rem;
-}
-
-.zipfield::placeholder {
-  color: #b6bdc6;
 }
 
 .zipfield:focus-visible,
 .postbutton:focus-visible {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -126,19 +341,19 @@ body {
   font-family: inherit;
   font-size: 1rem;
   font-weight: 700;
-  color: #fff;
-  background: var(--blue);
+  color: var(--btn-text);
+  background: var(--btn-bg);
   border: none;
   padding: 0.8rem 1.4rem;
   cursor: pointer;
 }
 
 .postbutton:hover:not(:disabled) {
-  background: #163d75;
+  background: var(--btn-bg-hover);
 }
 
 .postbutton:disabled {
-  background: var(--cancel);
+  background: var(--btn-bg-busy);
   cursor: progress;
 }
 
@@ -150,8 +365,8 @@ body {
 
 .postcard {
   position: relative;
-  background: #fff;
-  border: 1px solid #d5d9de;
+  background: var(--card);
+  border: 1px solid var(--card-border);
   border-left: 4px solid var(--blue);
   padding: 1.75rem 1.75rem 1.9rem;
   animation: arrive 320ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
@@ -189,7 +404,7 @@ body {
   letter-spacing: 0;
   vertical-align: 0.9em;
   margin-left: 0.15em;
-  color: var(--cancel);
+  color: var(--muted);
 }
 
 .conditions {
@@ -212,9 +427,9 @@ body {
   gap: 0.1rem;
   border: 2px solid var(--red);
   border-radius: 50%;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--red);
+  box-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--red);
   color: var(--red);
-  opacity: 0.82;
+  opacity: 0.9;
   transform: rotate(-9deg);
   animation: stamp 260ms 140ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
 }
@@ -225,7 +440,7 @@ body {
     transform: rotate(-9deg) scale(1.45);
   }
   to {
-    opacity: 0.82;
+    opacity: 0.9;
     transform: rotate(-9deg) scale(1);
   }
 }
@@ -244,8 +459,8 @@ body {
 /* ---------- error ---------- */
 
 .undeliverable {
-  background: #fff;
-  border: 1px solid #e6c9ca;
+  background: var(--card);
+  border: 1px solid var(--error-border);
   border-left: 4px solid var(--red);
   padding: 1.25rem 1.5rem 1.35rem;
   animation: arrive 260ms ease-out both;

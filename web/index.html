@@ -3,7 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Pre-JavaScript default only. A static meta tag is fixed at parse time, so
+      it cannot follow the toggle — the `color-scheme` CSS property inside each
+      token block does that, and CSS wins once it applies.
+    -->
+    <meta name="color-scheme" content="light dark" />
     <title>Weather, delivered</title>
+    <!--
+      Runs before first paint, on purpose. React mounts after the page has
+      already painted, so applying a stored theme in an effect would paint the
+      OS theme and then snap to the user's choice. Reading it here is the only
+      fix for that flash. No stored choice means no attribute, which leaves the
+      prefers-color-scheme media query in charge.
+    -->
+    <script>
+      try {
+        var t = localStorage.getItem('weather-theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch (e) {
+        /* localStorage throws in some privacy modes; the OS theme is a fine fallback */
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
